@@ -1,4 +1,4 @@
 ---
 - hosts: remote
   roles:
-  - role: ../../ansible-role-operations
+  - role: ../../ansible-role-atlassian

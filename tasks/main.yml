@@ -1,14 +1,4 @@
 ---
-- name: Create unprivledged folders
-  become: no
-  file:
-      path: "{{item}}"
-      state: directory
-      mode: 0755
-      recurse: yes
-  with_items:
-  - "{{ansible_user_dir}}/{{operations_download_directory}}"
-
 - name: Install Required Packages
   become: yes
   package:
@@ -20,91 +10,21 @@
   - "apt-transport-https"
   - "python-apt"
 
-- name: Download Sysdig Installation Script
-  become: no
-  get_url:
-      url: "https://s3.amazonaws.com/download.draios.com/stable/install-sysdig"
-      dest: "{{ansible_user_dir}}/{{operations_download_directory}}/install-sysdig"
-      mode: 0555
-  when: operations_sysdig_install
-
-- name: Run Sysdig Installation Script
-  become: yes
-  shell: "{{ansible_user_dir}}/{{operations_download_directory}}/install-sysdig"
-  args:
-      creates: "/usr/bin/csysdig"
-  when: operations_sysdig_install
-
-- name: Test Sysdig
-  become: no
-  command: /usr/bin/csysdig --version
-  when: operations_sysdig_install
-
-- name: Place Loggly Configuration File
-  become: yes
-  template:
-      src: templates/22-loggly.conf.j2
-      dest: /etc/rsyslog.d/22-loggly.conf
-      owner: root
-      group: root
-      mode: 444
-      backup: no
-  when: operations_loggly_install
-
-- name: Restart Syslog
-  become: yes
-  service:
-      name: rsyslog
-      state: restarted
-  when: operations_loggly_install
-
-- name: Test Loggly
-  become: no
-  command: "/usr/bin/logger 'Hello World!'"
-  when: operations_loggly_install
-
-- name: Add Datadog Repository Key
-  become: yes
-  apt_key:
-      keyserver: keyserver.ubuntu.com
-      id: C7A7DA52
-      state: present
-  when: operations_datadog_install
-
-- name: Add Datadog Repository
+- name: Add HipChat Repository
   become: yes
   apt_repository:
-      repo: 'deb https://apt.datadoghq.com/ stable main'
+      repo: "deb https://atlassian.artifactoryonline.com/atlassian/hipchat-apt-client {{ansible_distribution_release}} main"
       update_cache: yes
       state: present
-  when: operations_datadog_install
+  when: atlassian_hipchat_install
 
-- name: Install Datadog Package
+- name: Install HipChat Package
   become: yes
   package:
       name: "{{item}}"
       state: present
       allow_unauthenticated: yes
   with_items:
-  - "datadog-agent"
-  when: operations_datadog_install
-
-- name: Place Datadog Configuration File
-  become: yes
-  template:
-      src: templates/datadog.conf.j2
-      dest: /etc/dd-agent/datadog.conf
-      owner: root
-      group: root
-      mode: 444
-      backup: no
-  when: operations_datadog_install
-
-- name: Restart Datadog
-  become: yes
-  service:
-      name: datadog-agent
-      state: restarted
-  when: operations_datadog_install
-
+  - "hipchat4"
+  when: atlassian_hipchat_install
 
