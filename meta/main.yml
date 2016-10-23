@@ -32,9 +32,9 @@ galaxy_info:
 
   galaxy_tags:
       - operations
-      - sysdig
-      - datadog
-      - loggly
+      - development
+      - atlassian
+      - hipchat
 
 dependencies: []
   # List your role dependencies here, one per line.
