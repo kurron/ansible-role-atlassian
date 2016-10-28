@@ -16,7 +16,7 @@ Role Variables
 Dependencies
 ------------
 
-No dependencies.
+* kurron.base
 
 Example Playbook
 ----------------
@@ -24,8 +24,7 @@ Example Playbook
 ```
 - hosts: servers
   roles:
-      - { role: kurron.atlassian, atlassian_hipchat_install: true
- }
+      - { role: kurron.atlassian, atlassian_hipchat_install: true }
 ```
 
 License
