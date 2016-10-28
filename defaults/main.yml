@@ -1,6 +1,3 @@
 ---
-atlassian_download_directory: Downloads
-atlassian_software_directory: Software
-
 atlassian_hipchat_install: true
 
