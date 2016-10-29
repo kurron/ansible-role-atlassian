@@ -5,7 +5,7 @@
       repo: "deb https://atlassian.artifactoryonline.com/atlassian/hipchat-apt-client {{ansible_distribution_release}} main"
       update_cache: yes
       state: present
-  when: atlassian_hipchat_install
+  when: atlassian_hipchat_install and (ansible_distribution == "Ubuntu")
 
 - name: Install HipChat Package
   become: yes
@@ -15,5 +15,5 @@
       allow_unauthenticated: yes
   with_items:
   - "hipchat4"
-  when: atlassian_hipchat_install
+  when: atlassian_hipchat_install and (ansible_distribution == "Ubuntu")
 
